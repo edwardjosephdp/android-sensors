@@ -20,21 +20,6 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.SensorCatalog.route,
                     navController = navController
                 )
-/*                val viewModel by viewModels<MainViewModel>()
-                val isDark = viewModel.isDark
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            if (isDark) Color.DarkGray else Color.White
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = if (isDark) "It is dark outside" else "It is bright outside",
-                        color = if (isDark) Color.White else Color.Black
-                    )
-                }*/
             }
         }
     }

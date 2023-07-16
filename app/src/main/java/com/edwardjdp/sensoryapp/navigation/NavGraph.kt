@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.edwardjdp.sensoryapp.MainViewModel
+import com.edwardjdp.sensoryapp.ui.screens.accelerometer.AccelerometerSensorScreen
 import com.edwardjdp.sensoryapp.ui.screens.catalog.SensorCatalogScreen
 import com.edwardjdp.sensoryapp.ui.screens.light.LightSensorScreen
 
@@ -22,9 +23,18 @@ fun SetupNavigation(
         sensorCatalogRoute(
             navigateToLightSensor = {
                 navController.navigate(Screen.LightSensor.route)
+            },
+            navigateToAccelerometerSensor = {
+                navController.navigate(Screen.AccelerometerSensor.route)
             }
         )
         lightSensorRoute(
+            onBackPressed = {
+                navController.popBackStack()
+                navController.navigate(Screen.SensorCatalog.route)
+            }
+        )
+        accelerometerSensorRoute(
             onBackPressed = {
                 navController.popBackStack()
                 navController.navigate(Screen.SensorCatalog.route)
@@ -35,10 +45,12 @@ fun SetupNavigation(
 
 fun NavGraphBuilder.sensorCatalogRoute(
     navigateToLightSensor: () -> Unit,
+    navigateToAccelerometerSensor: () -> Unit,
 ) {
     composable(route = Screen.SensorCatalog.route) {
         SensorCatalogScreen(
-            navigateToLightSensor = navigateToLightSensor
+            navigateToLightSensor = navigateToLightSensor,
+            navigateToAccelerometerSensor = navigateToAccelerometerSensor,
         )
     }
 }
@@ -57,6 +69,23 @@ fun NavGraphBuilder.lightSensorRoute(
             },
             openLightSensor = viewModel::openLightSensor,
             closeLightSensor = viewModel::closeLightSensor
+        )
+    }
+}
+
+fun NavGraphBuilder.accelerometerSensorRoute(
+    onBackPressed: () -> Unit,
+) {
+    composable(route = Screen.AccelerometerSensor.route) {
+        val viewModel: MainViewModel = hiltViewModel()
+        AccelerometerSensorScreen(
+            isShaking = viewModel.isShaking,
+            onBackPressed = {
+                viewModel.closeAccelerometerSensor()
+                onBackPressed()
+            },
+            openAccelerometerSensor = viewModel::openAccelerometerSensor,
+            closeAccelerometerSensor = viewModel::closeAccelerometerSensor
         )
     }
 }
