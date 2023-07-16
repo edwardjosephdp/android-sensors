@@ -1,6 +1,8 @@
-package com.edwardjdp.sensoryapp
+package com.edwardjdp.sensoryapp.di
 
 import android.app.Application
+import com.edwardjdp.sensoryapp.LightSensor
+import com.edwardjdp.sensoryapp.MeasurableSensor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

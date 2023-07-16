@@ -14,12 +14,21 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     var isDark by mutableStateOf(false)
+    var isLightSensorOn by mutableStateOf(false)
 
-    init {
+    fun openLightSensor() {
         lightSensor.startListening()
+        isLightSensorOn = true
+
         lightSensor.setOnSensorValuesChangedListener { values ->
             val lux = values[0]
-            isDark = lux < 25f
+            Log.d("LUX_LVL", lux.toString())
+            isDark = lux <= 20f
         }
+    }
+
+    fun closeLightSensor() {
+        lightSensor.stopListening()
+        isLightSensorOn = false
     }
 }
