@@ -1,9 +1,6 @@
 package com.edwardjdp.sensoryapp
 
-import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,22 +12,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.sqrt
-import kotlin.time.Duration
 
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val lightSensor: LightSensor,
     private val accelerometerSensor: AccelerometerSensor,
+    private val gyroscopeSensor: GyroscopeSensor,
 ): ViewModel() {
 
     var isDark by mutableStateOf(false)
     var isLightSensorOn by mutableStateOf(false)
 
     var isShaking by mutableStateOf(false)
-    var acceleration by mutableStateOf(0f)
-    var currentAcceleration by mutableStateOf(0f)
-    var lastAcceleration by mutableStateOf(0f)
+    private var acceleration by mutableStateOf(0f)
+    private var currentAcceleration by mutableStateOf(0f)
+    private var lastAcceleration by mutableStateOf(0f)
+
+    var isRotating by mutableStateOf(Pair(false, 0))
 
     fun openLightSensor() {
         lightSensor.startListening()
@@ -75,5 +74,22 @@ class MainViewModel @Inject constructor(
 
     fun closeAccelerometerSensor() {
         accelerometerSensor.stopListening()
+    }
+
+    fun openGyroscopeSensor() {
+        gyroscopeSensor.startListening()
+        gyroscopeSensor.setOnSensorValuesChangedListener { values ->
+            isRotating = if (values[2] > 0.5f) {
+                Pair(true, -1)
+            } else if (values[2] < -0.5f) {
+                Pair(true, 1)
+            } else {
+                Pair(false, 0)
+            }
+        }
+    }
+
+    fun closeGyroscopeSensor() {
+        gyroscopeSensor.stopListening()
     }
 }

@@ -1,4 +1,4 @@
-package com.edwardjdp.sensoryapp.ui.screens.accelerometer
+package com.edwardjdp.sensoryapp.ui.screens.gyroscope
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,19 +14,19 @@ import androidx.compose.ui.graphics.Color
 import com.edwardjdp.sensoryapp.util.BackPressHandler
 
 @Composable
-fun AccelerometerSensorScreen(
-    isShaking: Boolean,
+fun GyroscopeSensorScreen(
+    isRotating: Pair<Boolean, Int>,
     onBackPressed: () -> Unit,
-    openAccelerometerSensor: () -> Unit,
-    closeAccelerometerSensor: () -> Unit,
+    openGyroscopeSensor: () -> Unit,
+    closeGyroscopeSensor: () -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
-        openAccelerometerSensor()
+        openGyroscopeSensor()
     }
 
     BackPressHandler(
         onBackPressed = {
-            closeAccelerometerSensor()
+            closeGyroscopeSensor()
             onBackPressed()
         }
     )
@@ -40,17 +40,32 @@ fun AccelerometerSensorScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    if (isShaking) Color.Yellow else Color.White
+                    if (isRotating.first) {
+                        if (isRotating.second == -1) {
+                            Color.Yellow
+                        } else {
+                            Color.Green
+                        }
+                    } else {
+                        Color.White
+                    }
                 ),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (isShaking) "Ohh yeah! I'm dancing!" else "Shake it so I'll dance.",
-                color = Color.Black
+                text = if (isRotating.first) {
+                    if (isRotating.second == -1) {
+                        "Rotating counter-clockwise"
+                    } else {
+                        "Rotating clockwise"
+                    }
+                } else {
+                    "I'm just steady"
+                }
             )
         }
         Button(onClick = {}) {
-            Text(text = if (isShaking) "Close Accelerometer Sensor" else "Open Accelerometer Sensor")
+            Text(text = if (isRotating.first) "Close Gyroscope Sensor" else "Open Gyroscope Sensor")
         }
     }
 }

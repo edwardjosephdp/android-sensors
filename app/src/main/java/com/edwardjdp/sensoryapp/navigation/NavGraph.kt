@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.edwardjdp.sensoryapp.MainViewModel
 import com.edwardjdp.sensoryapp.ui.screens.accelerometer.AccelerometerSensorScreen
 import com.edwardjdp.sensoryapp.ui.screens.catalog.SensorCatalogScreen
+import com.edwardjdp.sensoryapp.ui.screens.gyroscope.GyroscopeSensorScreen
 import com.edwardjdp.sensoryapp.ui.screens.light.LightSensorScreen
 
 @Composable
@@ -26,6 +27,9 @@ fun SetupNavigation(
             },
             navigateToAccelerometerSensor = {
                 navController.navigate(Screen.AccelerometerSensor.route)
+            },
+            navigateToGyroscopeSensor = {
+                navController.navigate(Screen.GyroscopeSensor.route)
             }
         )
         lightSensorRoute(
@@ -40,17 +44,25 @@ fun SetupNavigation(
                 navController.navigate(Screen.SensorCatalog.route)
             }
         )
+        gyroscopeSensorRoute (
+            onBackPressed = {
+                navController.popBackStack()
+                navController.navigate(Screen.SensorCatalog.route)
+            }
+        )
     }
 }
 
 fun NavGraphBuilder.sensorCatalogRoute(
     navigateToLightSensor: () -> Unit,
     navigateToAccelerometerSensor: () -> Unit,
+    navigateToGyroscopeSensor: () -> Unit,
 ) {
     composable(route = Screen.SensorCatalog.route) {
         SensorCatalogScreen(
             navigateToLightSensor = navigateToLightSensor,
             navigateToAccelerometerSensor = navigateToAccelerometerSensor,
+            navigateToGyroscopeSensor = navigateToGyroscopeSensor,
         )
     }
 }
@@ -86,6 +98,23 @@ fun NavGraphBuilder.accelerometerSensorRoute(
             },
             openAccelerometerSensor = viewModel::openAccelerometerSensor,
             closeAccelerometerSensor = viewModel::closeAccelerometerSensor
+        )
+    }
+}
+
+fun NavGraphBuilder.gyroscopeSensorRoute(
+    onBackPressed: () -> Unit,
+) {
+    composable(route = Screen.GyroscopeSensor.route) {
+        val viewModel: MainViewModel = hiltViewModel()
+        GyroscopeSensorScreen(
+            isRotating = viewModel.isRotating,
+            onBackPressed = {
+                viewModel.closeGyroscopeSensor()
+                onBackPressed()
+            },
+            openGyroscopeSensor = viewModel::openGyroscopeSensor,
+            closeGyroscopeSensor = viewModel::closeGyroscopeSensor
         )
     }
 }

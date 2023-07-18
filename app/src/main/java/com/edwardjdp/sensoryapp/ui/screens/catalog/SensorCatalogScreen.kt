@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 fun SensorCatalogScreen(
     navigateToLightSensor: () -> Unit,
     navigateToAccelerometerSensor: () -> Unit,
+    navigateToGyroscopeSensor: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -24,6 +25,9 @@ fun SensorCatalogScreen(
         }
         Button(onClick = navigateToAccelerometerSensor) {
             Text(text = "Accelerometer Sensor")
+        }
+        Button(onClick = navigateToGyroscopeSensor) {
+            Text(text = "Gyroscope Sensor")
         }
     }
 }
